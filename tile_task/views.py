@@ -7,8 +7,25 @@ from rest_framework.response import Response
 from rest_framework import viewsets, status
 
 # Create your views here.
+# =================================================================================================
+#
+# Note: 
+# Trade-offs between views vs viewsets
+# https://www.django-rest-framework.org/tutorial/6-viewsets-and-routers/
+
+# Using viewsets can be a really useful abstraction. It helps ensure that URL conventions will be 
+# consistent across your API, minimizes the amount of code you need to write, and allows you to 
+# concentrate on the interactions and representations your API provides rather than the specifics 
+# of the URL conf.
+
+# That doesn't mean it's always the right approach to take. There's a similar set of trade-offs 
+# to consider as when using class-based views instead of function based views. Using viewsets is 
+# less explicit than building your views individually.
+#
+# =================================================================================================
+#
 # -------------------------------------------------------------------------------------------------
-# Method 1: Use Django Framework portal
+# Method 1: Use ViewSet
 # API Root: http://127.0.0.1:8080
 # "tiles": "http://127.0.0.1:8000/tiles/",
 # "tasks": "http://127.0.0.1:8000/tasks/"
@@ -19,6 +36,7 @@ class TileViewSet(viewsets.ModelViewSet):
     queryset = Tile.objects.all()
     serializer_class = TileSerializer
     
+    # POST method
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
         serializer = self.serializer_class(data=data)
@@ -28,12 +46,14 @@ class TileViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # GET method
     def retrieve(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(id=kwargs['pk'])
         instance = get_object_or_404(queryset, pk=kwargs['pk'])
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    # PUT method
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         queryset = self.get_queryset().filter(id=kwargs['pk'])
@@ -44,6 +64,7 @@ class TileViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # Delete method
     def destroy(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(id=kwargs['pk'])
         instance = get_object_or_404(queryset, pk=kwargs['pk'])
@@ -51,11 +72,12 @@ class TileViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # -------------------------------------------------------------------------------------------------
-# task
+# Model: task
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+    # POST method
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
         # data['tile'] = kwargs['pk']
@@ -66,12 +88,14 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # GET method
     def retrieve(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(id=kwargs['pk'])
         instance = get_object_or_404(queryset, pk=kwargs['pk'])
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    # PUT method
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         queryset = self.get_queryset().filter(id=kwargs['pk'])
@@ -82,6 +106,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # DELETE method
     def destroy(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(id=kwargs['pk'])
         instance = get_object_or_404(queryset, pk=kwargs['pk'])
@@ -89,7 +114,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # -------------------------------------------------------------------------------------------------
-# Method 2: Customized Endpoints 
+# Method 2: Use Views
 # tile 
 # GET: http://127.0.0.1:8000/v2/tiles
 @api_view(['GET'])
@@ -131,10 +156,12 @@ def tile_one(request, tile_id=None, format=None):
             tile.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
+# -------------------------------------------------------------------------------------------------
 # task
 # GET:  http://127.0.0.1:8000/v2/tasks
 @api_view(['GET'])
 def tasks_all(request, format=None):
+    # GET method: Get all tasks
     tasks = Task.objects.all()
     serializer = TaskSerializer(tasks, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -149,6 +176,8 @@ def task_one(request, tile_id, task_id=None, format=None):
         tile = Tile.objects.get(pk=tile_id)
     except Tile.DoesNotExist:
         return Response({'error': 'Tile not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # POST method: Get one task
     if request.method == "POST":    
         serializer = TaskSerializer(data={**request.data, 'tile': tile.id }) 
         if serializer.is_valid():

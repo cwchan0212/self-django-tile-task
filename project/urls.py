@@ -18,5 +18,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Added urls of application tile_task
     path('', include('tile_task.urls')),
 ]

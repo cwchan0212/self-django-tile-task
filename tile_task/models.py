@@ -2,7 +2,10 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 # Create your models here.
-
+# =================================================================================================
+#
+# Note: The requirement of the project
+#
 # We have task objects that a user has to complete, 
 # each task has a title, an order field, a description 
 # and a type (such as survey, discussion, diary). 
@@ -12,7 +15,10 @@ from django.core.exceptions import ValidationError
 # The status can be either live, pending or archived. 
 # A tile can be made up of one or many tasks. 
 # A task can only belong to a single tile.
-
+#
+# =================================================================================================
+# 
+# Model: Tile
 class Tile(models.Model):
     # id =  models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -26,6 +32,9 @@ class Tile(models.Model):
 
     def __str__(self):
         return self.name
+#
+# -------------------------------------------------------------------------------------------------
+# Model: Tile
 
 class Task(models.Model):
     # id = models.AutoField(primary_key=True)
@@ -42,3 +51,6 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+#
+# =================================================================================================
+
