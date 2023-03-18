@@ -1,5 +1,8 @@
 ## Side Project: Tile-Task API (Django REST Framework) 
-<a href="#" target="_blank">:arrow_right: Preview</a>  
+<a href="https://6gg9.short.gy/F3uSof" target="_blank">:arrow_right: Preview</a>  
+
+[tile-task.mp4](https://user-images.githubusercontent.com/7412075/226128871-8ea1fa51-389e-4f38-b705-93603c79d2aa.mp4)
+
 
 ### Introduction 
 
