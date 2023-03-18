@@ -2,7 +2,6 @@ from django.urls import path, include
 from . import views
 from .views import TileViewSet, TaskViewSet
 from rest_framework import routers, permissions
-from rest_framework.urlpatterns import format_suffix_patterns
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -24,7 +23,7 @@ schema_view = get_schema_view(
 
 # -------------------------------------------------------------------------------------------------
 # Set the "Viewsets" router of Django REST Framework
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'tiles', TileViewSet)
 router.register(r'tasks', TaskViewSet)
 
@@ -46,5 +45,4 @@ urlpatterns = [
 
 ]
 
-# urlpatterns = format_suffix_patterns(urlpatterns)
 # =================================================================================================

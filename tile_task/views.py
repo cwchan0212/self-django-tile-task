@@ -19,13 +19,13 @@ from rest_framework import viewsets, status
 # of the URL conf.
 
 # That doesn't mean it's always the right approach to take. There's a similar set of trade-offs 
-# to consider as when using class-based views instead of function based views. Using viewsets is 
+# to consider when using class-based views instead of function based views. Using viewsets is 
 # less explicit than building your views individually.
 #
 # =================================================================================================
 #
 # -------------------------------------------------------------------------------------------------
-# Method 1: Use ViewSet
+# Method 1: Use viewset
 # API Root: http://127.0.0.1:8080
 # "tiles": "http://127.0.0.1:8000/tiles/",
 # "tasks": "http://127.0.0.1:8000/tasks/"
