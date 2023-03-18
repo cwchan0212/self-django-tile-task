@@ -60,7 +60,7 @@ python manage.py runserver
 
 4. **Create** an application **tile-task**
 ```
-python manage.py startapp tile-task
+python manage.py startapp tile_task
 ```
 
 5. **Apply** the migrations to build up models
